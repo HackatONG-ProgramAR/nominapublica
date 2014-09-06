@@ -28,6 +28,7 @@ class Entity(object):
         d[column.name] = None
     return d
 
+
 class Persona(db.Model, Entity):
     __tablename__ = 'personas'
 
@@ -38,7 +39,8 @@ class Persona(db.Model, Entity):
     sueldos = relationship("Sueldo", backref=backref('sueldos'))
 
     def __repr__(self):
-        return '<Persona id {}>'.format(self.id)
+        return '<Persona {0} {1}>'.format(self.id, self.apellido)
+
 
 class Sueldo(db.Model, Entity):
     __tablename__ = 'sueldos'
@@ -53,7 +55,7 @@ class Sueldo(db.Model, Entity):
     persona = relationship("Persona", backref=backref('persona'))
 
     def __repr__(self):
-        return '<sueldo id {}>'.format(self.id)
+        return '<sueldo {0}-{1}>'.format(self.month, self.year)
 
 @app.route('/api/personas')
 def hello():
