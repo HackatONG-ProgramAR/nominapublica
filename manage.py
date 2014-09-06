@@ -14,20 +14,35 @@ manager.add_command('db', MigrateCommand)
 
 import csv
 
+def cleanMoney(dirty):
+	return dirty.replace('$', '').replace(',','').strip()
+
 @manager.command
 def readCsv(filename):
 	print 'importing', filename
+	# db.drop_all()
+	# db.create_all()
 
 	with open(filename, 'r') as aFile:
-		reader = csv.DictReader(aFile)
+		reader = csv.reader(aFile)
 		for row in reader:
-			fullname = row['fullname'].strip().decode('utf8')
+			fecha = row[0].strip()
+			fullname = row[1].strip().decode('utf8')
+			bruto = row[2].strip()
+			costo = row[3].strip()
+			neto = row[4].strip()
+			situacion = row[5].strip()
+
 			apellido = fullname.split(' ')[0]
 			nombres = ' '.join(fullname.split(' ')[1:])
-			sueldoBruto = row['sueldo'].replace('$', '').replace(',','').strip()
-			print fullname, apellido, nombres, sueldoBruto
+			sueldoBruto = cleanMoney(bruto)
+			year = int(fecha[0:4])
+			month = int(fecha[4:])
+
+			print fecha, fullname, apellido, nombres, sueldoBruto
+
 			persona = Persona(apellido=apellido, nombres=nombres)
-			sueldo = Sueldo(bruto=float(sueldoBruto))
+			sueldo = Sueldo(bruto=float(sueldoBruto), year=year, month=month)
 			persona.sueldos.append(sueldo)
 			db.session.merge(persona)
 			
