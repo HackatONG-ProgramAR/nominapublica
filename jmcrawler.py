@@ -10,7 +10,7 @@ from urlparse import urljoin
 from bs4 import BeautifulSoup
 
 
-OUTFILE = "jesusmariares.json"
+OUTFILE = "nominas/jesusmariares.json"
 ENTRY_COUNT = 10
 
 class JMCrawler(object):
