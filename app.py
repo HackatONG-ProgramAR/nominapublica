@@ -8,7 +8,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 
 
-from sqlalchemy import Float
+from sqlalchemy import Float, ForeignKey
+from sqlalchemy.orm import relationship, backref
+
 import json
 
 class Entity(object):
@@ -33,9 +35,25 @@ class Persona(db.Model, Entity):
     dni = db.Column(db.Integer)
     apellido = db.Column(db.String())
     nombres = db.Column(db.String())
+    sueldos = relationship("Sueldo", backref=backref('sueldos'))
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<Persona id {}>'.format(self.id)
+
+class Sueldo(db.Model, Entity):
+    __tablename__ = 'sueldos'
+
+    id = db.Column(db.Integer, primary_key=True)
+    year = db.Column(db.Integer)
+    month = db.Column(db.Integer)
+    bruto = db.Column(db.Float)
+    neto = db.Column(db.Float)
+    persona_id = db.Column(db.Integer, ForeignKey("personas.id"))
+
+    persona = relationship("Persona", backref=backref('persona'))
+
+    def __repr__(self):
+        return '<sueldo id {}>'.format(self.id)
 
 @app.route('/api/personas')
 def hello():
