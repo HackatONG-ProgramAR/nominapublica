@@ -20,11 +20,10 @@ def readCsv(filename):
 	with open(filename, 'r') as aFile:
 		reader = csv.DictReader(aFile)
 		for row in reader:
-			print row['fullname']
-			persona = Persona(apellido=row)
+			fullname = row['fullname'].decode('utf8').trim()
+			persona = Persona(apellido=fullname)
 			db.session.add(persona)
 	db.session.commit()
-	print 'importing'
 
 if __name__ == '__main__':
     manager.run()
